@@ -9,12 +9,15 @@ public class IntervalAnalysis3 {
         int y = 0;
         int x = 7;
         int k = 3;
+        // k goes down by subtracting a variable, not the constant -1 (k-- or k = k - 1 can
+        // compile to k = k + (-1)): see "Why one and not k--?" in the assignment.
+        int one = 1;
         x = x + 1;
         while(k > 0) {
             x = 7;
             x = x + 1;
             y = y + 1;
-            k = k - 1;
+            k = k - one;
         }
         return x;
     }
