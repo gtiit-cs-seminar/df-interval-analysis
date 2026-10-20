@@ -65,6 +65,18 @@ statement: when a test fails, run it on the test's target and compare.
 In VS Code you can also use **Terminal → Run Task...**: "Tests (gradlew test)" and "Interval
 analysis on a class". The test report ends up in `build/reports/tests/test/index.html`.
 
+> [!IMPORTANT]
+> **Always run the tests with Gradle**, as above. Don't use the ▷ buttons next to the tests or
+> VS Code's **Testing** view: they compile the code with VS Code's own compiler, which turns
+> `k = k - 1` into `k = k + (-1)` in Tai-e's IR. With widening, the constant `-1` goes to the
+> closest break, `0`, so the loop of `IntervalAnalysis3` never changes `k`. The widening and narrowing
+> tests then fail even if your code is right (`expected: <[-∞,3]> but was: <[3,3]>`).
+> Gradle compiles with `javac`, like the grading does.
+>
+> To run the tests from VS Code with Gradle, use **Terminal → Run Task... → "Tests (gradlew test)"**,
+> or the **Gradle** view (the elephant icon in the left bar, from the Extension Pack for Java):
+> *df-interval-analysis → Tasks → verification → test*.
+
 ## 5. Submit
 
 1. Commit and push to the `main` branch of your fork, as often as you like:
@@ -97,3 +109,5 @@ If we fix something in this repo, your fork's page says "This branch is N commit
 - **`./gradlew: Permission denied`** (macOS/Linux): run `sh ./gradlew test`, or `chmod +x gradlew` once.
 - **A test never finishes**: a widening that doesn't reach a fixpoint makes the analysis loop forever.
   Stop it with Ctrl+C and check your widening operator.
+- **The widening and narrowing tests fail in VS Code but pass with `./gradlew test`**: you ran them with
+  the ▷ buttons or the Testing view. Run them with Gradle (see the note in section 4).
